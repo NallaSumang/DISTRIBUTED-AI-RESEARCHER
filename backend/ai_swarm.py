@@ -19,14 +19,13 @@ class AgentState(TypedDict):
 def create_llm_chain(max_tokens: int):
     api_key = os.getenv("GROQ_API_KEY")
     # Primary model (currently known to work for this key)
-    primary = ChatGroq(model="qwen/qwen3.6-27b", temperature=0, max_tokens=max_tokens, api_key=api_key)
+    primary = ChatGroq(model="qwen/qwen3.8-27b", temperature=0, max_tokens=max_tokens, api_key=api_key)
     
-    # Fallback models (in case of 404, 413 Rate Limit, or 503 Downtime)
+    # Fallback models — verified live via GET /openai/v1/models on 2026-09-26
     fallbacks = [
-        ChatGroq(model="llama3-8b-8192", temperature=0, max_tokens=max_tokens, api_key=api_key),
-        ChatGroq(model="mixtral-8x7b-32768", temperature=0, max_tokens=max_tokens, api_key=api_key),
-        ChatGroq(model="llama-3.3-70b-versatile", temperature=0, max_tokens=max_tokens, api_key=api_key),
-        ChatGroq(model="gemma2-9b-it", temperature=0, max_tokens=max_tokens, api_key=api_key)
+        ChatGroq(model="openai/gpt-oss-20b", temperature=0, max_tokens=max_tokens, api_key=api_key),
+        ChatGroq(model="openai/gpt-oss-120b", temperature=0, max_tokens=max_tokens, api_key=api_key),
+        ChatGroq(model="allam-2-7b", temperature=0, max_tokens=max_tokens, api_key=api_key),
     ]
     return primary.with_fallbacks(fallbacks)
 
