@@ -18,6 +18,16 @@ const nextConfig: NextConfig = {
     "micromark",
     "micromark-extension-gfm",
   ],
+
+  // Increase Vercel serverless function timeout for the /api/proxy route.
+  // Default is 10s — HuggingFace Space takes 20-30s to complete a full report.
+  // Without this, the proxy silently drops the connection and the frontend
+  // loops forever receiving {status:"processing"} with no output.
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "2mb",
+    },
+  },
 };
 
 export default nextConfig;
