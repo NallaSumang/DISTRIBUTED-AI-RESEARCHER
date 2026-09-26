@@ -126,26 +126,60 @@ def search_agent(state: AgentState):
 def writer_agent(state: AgentState):
     print("   -> Writing...")
     context = "\n\n".join(state['raw_data'])
-    # Truncate context to ~6000 chars (~1500 tokens) to ensure prompt_tokens + max_tokens < Groq's 6000 TPM limit
-    if len(context) > 6000:
-        context = context[:6000] + "... (truncated)"
+
+    # Context budget: gpt-oss-20b has 131K ctx window.
+    # 20000 chars ≈ 5000 tokens of search evidence — gives the writer rich grounding.
+    # Old limit was 6000 chars (Qwen-era leftover) which starved the writer of real data.
+    if len(context) > 20000:
+        context = context[:20000] + "\n\n... [additional sources truncated for token budget]"
+
     prompt = (
-        f"Act as a globally recognized Principal AI Architect and Lead Technical Author. Produce an exhaustive, highly detailed, and elite-tier Markdown research manifesto on the following topic: {state['query']}\n"
-        f"Structure your masterpiece with the following sections:\n"
-        f"1. Executive Overview (High-level summary of the landscape)\n"
-        f"2. Deep-Dive Architectural & Contextual Analysis (Extensively detailed breakdown)\n"
-        f"3. Core Metrics, Economics, & Key Facts (Data-driven evidence)\n"
-        f"4. Prominent Real-World Case Studies (At least 3 highly detailed examples)\n"
-        f"5. Visionary & Optimistic Conclusion (Forward-looking trajectory)\n\n"
-        f"CRITICAL DIRECTIVES (STRICT LENGTH LIMITS):\n"
-        f"- Tone: Hyper-professional, relentlessly optimistic, highly analytical, and visionary.\n"
-        f"- Verbosity & Length: Write the most exhaustive, deep, and lengthy report possible, BUT YOU MUST NOT EXCEED 2000 WORDS. You are running on a server with hard token limits. Maximize the depth and quality of the text, but ensure you reach section 5 and gracefully conclude before hitting the limit.\n"
-        f"- Pacing: You MUST reach section 5 and write a complete, elegant conclusion.\n"
-        f"- Format: Use bolding, bullet points, and sub-headers to make it visually stunning.\n\n"
-        f"Context:\n{context}"
+        f"You are a world-class Principal Research Analyst and Technical Author publishing for a professional audience. "
+        f"Your task is to write an exhaustive, deeply analytical, and richly structured Markdown research report on the following topic:\n\n"
+        f"**TOPIC: {state['query']}**\n\n"
+        f"---\n\n"
+        f"## MANDATORY REPORT STRUCTURE\n\n"
+        f"Your report MUST contain ALL of the following sections, each written with maximum depth:\n\n"
+        f"### 1. 🌐 Executive Overview\n"
+        f"   - A high-level, authoritative summary of the topic landscape\n"
+        f"   - Why this topic matters right now (current relevance and momentum)\n"
+        f"   - The single most important insight a decision-maker needs to know\n\n"
+        f"### 2. 🏗️ Deep-Dive Architecture & Contextual Analysis\n"
+        f"   - Comprehensive technical or conceptual breakdown — go deep, not shallow\n"
+        f"   - Sub-components, mechanisms, or moving parts explained with precision\n"
+        f"   - Historical context and evolution that shaped the current state\n"
+        f"   - Key players, institutions, technologies, or frameworks involved\n\n"
+        f"### 3. 📊 Core Metrics, Economics & Key Facts\n"
+        f"   - Hard data, statistics, benchmarks, and quantitative evidence from the search context\n"
+        f"   - Market size, growth rates, adoption curves, or performance numbers where applicable\n"
+        f"   - At least 5 distinct, specific data points — cite source URLs from the context\n\n"
+        f"### 4. 🔬 Real-World Case Studies & Practical Applications\n"
+        f"   - At least 3 detailed, named real-world examples (companies, projects, events, or experiments)\n"
+        f"   - For each: what they did, why it worked/failed, and what was learned\n"
+        f"   - Draw concrete lessons applicable to the reader\n\n"
+        f"### 5. ⚠️ Challenges, Limitations & Critical Perspectives\n"
+        f"   - What are the known failure modes, risks, or controversies?\n"
+        f"   - What does the opposition or critical camp argue?\n"
+        f"   - What unsolved problems remain?\n\n"
+        f"### 6. 🚀 Visionary Outlook & Strategic Conclusion\n"
+        f"   - Forward-looking trajectory: where is this heading in 2–5 years?\n"
+        f"   - Concrete recommendations or action items for a practitioner\n"
+        f"   - A memorable, compelling closing statement\n\n"
+        f"---\n\n"
+        f"## QUALITY & FORMAT DIRECTIVES\n\n"
+        f"- **Depth over brevity**: You have a 4096-token output budget. USE IT FULLY. This is not a summary — it is a manifesto.\n"
+        f"- **No padding**: Every sentence must carry information. No filler, no vague generalities.\n"
+        f"- **Formatting**: Use bold for key terms, bullet points for lists, sub-headers (###, ####) for navigation, and horizontal rules (---) between major sections.\n"
+        f"- **Grounding**: Cite specific facts, URLs, names, and data points from the Context below. Do not invent statistics.\n"
+        f"- **Completion**: You MUST reach Section 6 and deliver a complete conclusion. Do not truncate mid-section.\n"
+        f"- **Tone**: Hyper-professional, analytically rigorous, and forward-looking. Write as if publishing in a top-tier research journal.\n\n"
+        f"---\n\n"
+        f"## SEARCH CONTEXT (Grounding Data)\n\n"
+        f"{context}"
     )
     res = writer_llm.invoke([HumanMessage(content=prompt)])
     return {"final_report": strip_thinking(res.content)}
+
 
 workflow = StateGraph(AgentState)
 workflow.add_node("planner", planner_agent)
