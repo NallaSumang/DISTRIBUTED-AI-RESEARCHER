@@ -16,24 +16,34 @@ class AgentState(TypedDict):
     raw_data: List[str]
     final_report: str
 
-def create_llm_chain(max_tokens: int):
+def create_planner_llm(max_tokens: int):
+    """Planner: uses qwen3.8-27b (reasoning model) — great for structured JSON decomposition."""
     api_key = os.getenv("GROQ_API_KEY")
-    # Primary model (currently known to work for this key)
     primary = ChatGroq(model="qwen/qwen3.8-27b", temperature=0, max_tokens=max_tokens, api_key=api_key)
-    
-    # Fallback models — verified live via GET /openai/v1/models on 2026-09-26
     fallbacks = [
         ChatGroq(model="openai/gpt-oss-20b", temperature=0, max_tokens=max_tokens, api_key=api_key),
+        ChatGroq(model="allam-2-7b", temperature=0, max_tokens=max_tokens, api_key=api_key),
+    ]
+    return primary.with_fallbacks(fallbacks)
+
+def create_writer_llm(max_tokens: int):
+    """Writer: uses gpt-oss-20b (non-reasoning) — avoids <think> token blowout that causes infinite polling.
+    qwen3.8-27b emits large <think> blocks that silently exhaust Groq free-tier TPM,
+    causing the writer to never finish and result:{job_id} to never be set in Redis."""
+    api_key = os.getenv("GROQ_API_KEY")
+    primary = ChatGroq(model="openai/gpt-oss-20b", temperature=0, max_tokens=max_tokens, api_key=api_key)
+    fallbacks = [
         ChatGroq(model="openai/gpt-oss-120b", temperature=0, max_tokens=max_tokens, api_key=api_key),
+        ChatGroq(model="qwen/qwen3.8-27b", temperature=0, max_tokens=max_tokens, api_key=api_key),
         ChatGroq(model="allam-2-7b", temperature=0, max_tokens=max_tokens, api_key=api_key),
     ]
     return primary.with_fallbacks(fallbacks)
 
 # Planner: lightweight — only needs a short JSON list output
-planner_llm = create_llm_chain(max_tokens=512)
+planner_llm = create_planner_llm(max_tokens=1024)
 
-# Writer: needs large output budget for full detailed reports (reduced to 4096 for Groq Free Tier limits)
-writer_llm = create_llm_chain(max_tokens=4096)
+# Writer: large output budget — uses non-reasoning model to avoid token blowout
+writer_llm = create_writer_llm(max_tokens=4096)
 
 from pydantic import BaseModel, Field
 
