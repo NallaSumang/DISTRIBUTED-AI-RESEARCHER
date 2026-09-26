@@ -11,7 +11,12 @@ import redis
 
 load_dotenv(find_dotenv(), override=True)
 
-app = FastAPI(title="Distributed AI Research Agent API")
+app = FastAPI(
+    title="Distributed AI Research Agent API",
+    docs_url=None,       # disable /docs (Swagger UI)
+    redoc_url=None,      # disable /redoc
+    openapi_url=None,    # disable /openapi.json — hides endpoint structure from scanners
+)
 
 # --- CORS: Only allow your actual frontend domain ---
 ALLOWED_ORIGINS = os.getenv(
