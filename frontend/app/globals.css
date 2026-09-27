@@ -79,8 +79,9 @@ body {
   line-height: 1.9;
   font-weight: 300;
   letter-spacing: 0.015em;
-  overflow-x: auto;
+  overflow-x: hidden;
   word-break: break-words;
+  max-width: 100%;
 }
 
 /* ── Headings ── */
@@ -238,6 +239,7 @@ body {
   border-radius: 0.75rem;
   padding: 1.25em 1.5em;
   overflow-x: auto;
+  max-width: 100%;
   margin: 1.75em 0;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(0, 0, 0, 0.3);
 }
@@ -339,12 +341,13 @@ body {
     border-radius: 0.5rem;
   }
 
-  /* Tables: force horizontal scroll so they never break the layout */
+  /* Tables: scroll internally — never push the page wider */
   .report-body table {
     display: block;
+    width: 100%;
+    max-width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    white-space: nowrap;
     font-size: 0.75em;
   }
 

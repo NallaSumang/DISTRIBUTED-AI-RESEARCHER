@@ -192,7 +192,7 @@ export default function Home() {
       .from("research_history")
       .select("*")
       .order("created_at", { ascending: false })
-      .limit(8);
+      .limit(20);
     if (data) setHistory(data as ResearchItem[]);
     if (error) console.error("Memory Fetch Error:", error);
   }, []);
@@ -286,6 +286,7 @@ export default function Home() {
         {sidebarOpen && (
           <>
             <motion.div
+              key="sidebar-overlay"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -293,6 +294,7 @@ export default function Home() {
               className="fixed inset-0 z-30 bg-black/70 backdrop-blur-sm xl:hidden"
             />
             <motion.aside
+              key="sidebar-panel"
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
