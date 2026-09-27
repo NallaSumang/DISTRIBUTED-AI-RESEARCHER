@@ -291,15 +291,15 @@ export default function Home() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSidebarOpen(false)}
-              className="fixed inset-0 z-30 bg-black/70 backdrop-blur-sm xl:hidden"
+              className="fixed inset-0 z-30 bg-black/70 xl:hidden"
             />
             <motion.aside
               key="sidebar-panel"
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed inset-y-0 left-0 z-40 w-72 flex flex-col bg-[#07000a]/95 border-r border-white/[0.03] backdrop-blur-3xl xl:hidden"
+              transition={{ type: "tween", ease: "easeOut", duration: 0.22 }}
+              className="fixed inset-y-0 left-0 z-40 w-72 flex flex-col bg-[#07000a]/95 border-r border-white/[0.03] xl:hidden"
             >
               <div className="flex items-center justify-end p-4 shrink-0">
                 <button
@@ -334,7 +334,7 @@ export default function Home() {
 
           {/* HEADER */}
           <header className="flex items-center justify-between mb-10 sm:mb-16">
-            <div className="flex items-center gap-3 sm:gap-4">
+            <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
               <button
                 onClick={() => setSidebarOpen(true)}
                 className="xl:hidden p-2 rounded-xl bg-white/[0.02] border border-white/[0.03] text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.04] transition-all duration-300"
@@ -344,7 +344,7 @@ export default function Home() {
               <div className="bg-gradient-to-br from-red-950 to-[#050505] border border-white/[0.05] p-2.5 rounded-xl shadow-[0_0_30px_rgba(127,29,29,0.15)]">
                 <Brain className="text-red-700/80" size={20} strokeWidth={1.5} />
               </div>
-              <div>
+              <div className="min-w-0">
                 <h1 className="text-lg sm:text-2xl font-light tracking-[0.08em] text-zinc-100 leading-none">
                   DISTRIBUTED{" "}
                   <span className="font-bold text-red-500 drop-shadow-[0_0_12px_rgba(239,68,68,0.8)]">
@@ -358,7 +358,7 @@ export default function Home() {
             </div>
 
             {/* Status badges */}
-            <div className="flex items-center gap-3 sm:gap-4">
+            <div className="flex items-center gap-3 sm:gap-4 shrink-0">
               <button
                 onClick={clearChat}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/[0.03] bg-white/[0.01] hover:bg-white/[0.03] hover:text-zinc-200 text-[9px] font-medium text-zinc-400 tracking-widest uppercase transition-all duration-300"
@@ -400,7 +400,7 @@ export default function Home() {
           {/* SEARCH BOX */}
           <div className="group relative mb-10 sm:mb-16">
             <div className="absolute -inset-1 bg-gradient-to-r from-red-950 to-transparent rounded-3xl blur-2xl opacity-10 group-hover:opacity-20 transition duration-1000" />
-            <div className="relative flex flex-col sm:flex-row items-stretch bg-[#050505]/80 border border-white/[0.04] backdrop-blur-3xl rounded-2xl sm:rounded-3xl p-2 shadow-2xl gap-2 sm:gap-0">
+            <div className="relative flex flex-row items-center bg-[#050505]/80 border border-white/[0.04] backdrop-blur-3xl rounded-2xl p-2 shadow-2xl">
               <div className="flex items-center flex-1 px-4">
                 <Search className="text-zinc-600 mr-3 shrink-0" size={18} strokeWidth={1.5} />
                 <input
@@ -416,7 +416,7 @@ export default function Home() {
               <button
                 onClick={handleSearch}
                 disabled={loading}
-                className="bg-zinc-100 text-black hover:bg-white disabled:bg-[#0a0a0a] disabled:text-zinc-700 px-8 py-3 sm:py-5 sm:px-10 rounded-xl sm:rounded-2xl text-xs font-semibold transition-all duration-500 disabled:border disabled:border-white/[0.02] uppercase tracking-[0.2em] w-full sm:w-auto shrink-0"
+                className="bg-zinc-100 text-black hover:bg-white disabled:bg-[#0a0a0a] disabled:text-zinc-700 px-5 py-3 sm:py-5 sm:px-10 rounded-xl sm:rounded-2xl text-xs font-semibold transition-all duration-500 disabled:border disabled:border-white/[0.02] uppercase tracking-[0.2em] shrink-0"
               >
                 {loading ? (
                   <Loader2 className="animate-spin mx-auto" size={15} />
