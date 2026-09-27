@@ -434,7 +434,7 @@ export default function Home() {
           </div>
 
           {/* RESULT AREA */}
-          <AnimatePresence mode="wait">
+          <AnimatePresence>
             {loading && !report && (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -450,7 +450,6 @@ export default function Home() {
 
             {report && (
               <motion.div
-                key={report.substring(0, 32)}
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
