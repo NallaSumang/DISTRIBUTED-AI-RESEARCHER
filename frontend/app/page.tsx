@@ -74,20 +74,18 @@ const SidebarContent = memo(function SidebarContent({
           </p>
         )}
         {history.map((item) => (
-          <motion.button
-            layout
+          <button
             key={item.id}
             onClick={() => {
               onSelect(stripThinking(item.report));
               onClose();
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
-            className="w-full text-left p-4 rounded-xl bg-white/[0.01] border border-white/[0.02] hover:bg-white/[0.03] hover:border-red-900/20 transition-all duration-500 group"
+            className="w-full text-left p-4 rounded-xl bg-white/[0.01] border border-white/[0.02] hover:bg-white/[0.03] hover:border-red-900/20 transition-colors duration-150 group"
           >
-            <p className="text-xs font-light leading-relaxed line-clamp-2 text-zinc-500 group-hover:text-zinc-200 transition-colors duration-300">
+            <p className="text-xs font-light leading-relaxed line-clamp-2 text-zinc-500 group-hover:text-zinc-200 transition-colors duration-150">
               {item.query}
             </p>
-            {/* Issue #4 fixed: was text-zinc-700 — near invisible on dark bg */}
             <p className="text-[9px] text-zinc-500 mt-2 font-mono tracking-widest">
               {new Date(item.created_at).toLocaleDateString("en-GB", {
                 day: "2-digit",
@@ -95,7 +93,7 @@ const SidebarContent = memo(function SidebarContent({
                 year: "numeric",
               })}
             </p>
-          </motion.button>
+          </button>
         ))}
       </div>
     </>
@@ -337,7 +335,7 @@ export default function Home() {
             <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="xl:hidden p-2 rounded-xl bg-white/[0.02] border border-white/[0.03] text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.04] transition-all duration-300"
+                className="xl:hidden p-2 rounded-xl bg-white/[0.02] border border-white/[0.03] text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.04] transition-colors duration-150"
               >
                 <Menu size={18} />
               </button>
@@ -361,7 +359,7 @@ export default function Home() {
             <div className="flex items-center gap-3 sm:gap-4 shrink-0">
               <button
                 onClick={clearChat}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/[0.03] bg-white/[0.01] hover:bg-white/[0.03] hover:text-zinc-200 text-[9px] font-medium text-zinc-400 tracking-widest uppercase transition-all duration-300"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/[0.03] bg-white/[0.01] hover:bg-white/[0.03] hover:text-zinc-200 text-[9px] font-medium text-zinc-400 tracking-widest uppercase transition-colors duration-150"
               >
                 <Plus size={11} strokeWidth={1.5} />
                 <span className="hidden sm:inline">New Research</span>
@@ -400,7 +398,7 @@ export default function Home() {
           {/* SEARCH BOX */}
           <div className="group relative mb-10 sm:mb-16">
             <div className="absolute -inset-1 bg-gradient-to-r from-red-950 to-transparent rounded-3xl blur-2xl opacity-10 group-hover:opacity-20 transition duration-1000" />
-            <div className="relative flex flex-row items-center bg-[#050505]/80 border border-white/[0.04] backdrop-blur-3xl rounded-2xl p-2 shadow-2xl">
+            <div className="relative flex flex-row items-center bg-[#050505] border border-white/[0.04] rounded-2xl p-2 shadow-2xl">
               <div className="flex items-center flex-1 px-4">
                 <Search className="text-zinc-600 mr-3 shrink-0" size={18} strokeWidth={1.5} />
                 <input
@@ -416,7 +414,7 @@ export default function Home() {
               <button
                 onClick={handleSearch}
                 disabled={loading}
-                className="bg-zinc-100 text-black hover:bg-white disabled:bg-[#0a0a0a] disabled:text-zinc-700 px-5 py-3 sm:py-5 sm:px-10 rounded-xl sm:rounded-2xl text-xs font-semibold transition-all duration-500 disabled:border disabled:border-white/[0.02] uppercase tracking-[0.2em] shrink-0"
+                className="bg-zinc-100 text-black hover:bg-white disabled:bg-[#0a0a0a] disabled:text-zinc-700 px-5 py-3 sm:py-5 sm:px-10 rounded-xl sm:rounded-2xl text-xs font-semibold transition-colors duration-150 disabled:border disabled:border-white/[0.02] uppercase tracking-[0.2em] shrink-0"
               >
                 {loading ? (
                   <Loader2 className="animate-spin mx-auto" size={15} />
@@ -447,7 +445,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="bg-white/[0.01] border border-white/[0.03] backdrop-blur-3xl rounded-2xl sm:rounded-[2rem] p-6 sm:p-10 lg:p-16 shadow-[0_0_50px_rgba(0,0,0,0.5)]"
+                className="bg-white/[0.01] border border-white/[0.03] rounded-2xl sm:rounded-[2rem] p-6 sm:p-10 lg:p-16 shadow-[0_0_50px_rgba(0,0,0,0.5)]"
               >
                 {/* Issue #6 fixed: border bumped to /[0.06]; issue #7 fixed: label is visible */}
                 <div className="flex items-center gap-3 mb-8 pb-6 border-b border-white/[0.06]">
@@ -468,7 +466,7 @@ export default function Home() {
                 <div className="mt-12 pt-6 border-t border-white/[0.04] flex justify-end">
                   <button
                     onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] uppercase tracking-[0.2em] text-zinc-600 hover:text-zinc-300 border border-white/[0.03] hover:border-white/[0.07] bg-white/[0.01] hover:bg-white/[0.02] transition-all duration-300"
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] uppercase tracking-[0.2em] text-zinc-600 hover:text-zinc-300 border border-white/[0.03] hover:border-white/[0.07] bg-white/[0.01] hover:bg-white/[0.02] transition-colors duration-150"
                   >
                     <ChevronUp size={12} />
                     Back to top
