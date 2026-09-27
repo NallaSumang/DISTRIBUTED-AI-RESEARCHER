@@ -133,6 +133,7 @@ The aesthetics are designed to be clean, professional, and readable for long-for
 - **Groq Free Tier 8000 TPM Limit**: The system is explicitly designed to stay under Groq's 8,000 Tokens Per Minute limit on the free tier. Context is automatically truncated to ~12k characters and output is capped at 4096 tokens to prevent 413 Rate Limit crashes.
 - **Reasoning Models**: If switched to a model like Qwen3, it emits `<think>` blocks. We dynamically strip these out before rendering to keep the report clean.
 - **Redis TTL**: Job results expire from the Redis cache after 1 hour, but remain permanently in the Supabase history.
+- **History Fallback UI**: If a backend job crashes mid-run and saves an empty/null report to Supabase, the React UI catches this gracefully and displays an `Error: Report data was empty or corrupted` message instead of breaking the layout. Clicking history items instantly updates both the search bar and the result area seamlessly via Framer Motion without visual layout-thrashing or blinking.
 
 ---
 
