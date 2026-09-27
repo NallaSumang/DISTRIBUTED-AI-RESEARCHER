@@ -80,7 +80,8 @@ body {
   font-weight: 300;
   letter-spacing: 0.015em;
   overflow-x: hidden;
-  word-break: break-words;
+  overflow-wrap: break-word;
+  word-break: break-word;
   max-width: 100%;
 }
 
@@ -166,6 +167,8 @@ body {
   text-underline-offset: 4px;
   transition: color 0.2s ease, text-decoration-color 0.2s ease;
   font-weight: 500;
+  overflow-wrap: break-word;
+  word-break: break-all;   /* URLs must break at any char on mobile */
 }
 .report-body a:hover {
   color: #fecaca;
