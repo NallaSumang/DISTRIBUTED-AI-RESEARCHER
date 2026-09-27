@@ -44,7 +44,7 @@ function stripThinking(text: string): string {
 /* ------------------------------------------------------------------ */
 interface SidebarProps {
   history: ResearchItem[];
-  onSelect: (report: string) => void;
+  onSelect: (item: ResearchItem) => void;
   onClose: () => void;
 }
 
@@ -77,7 +77,7 @@ const SidebarContent = memo(function SidebarContent({
           <button
             key={item.id}
             onClick={() => {
-              onSelect(stripThinking(item.report));
+              onSelect(item);
               onClose();
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
@@ -175,6 +175,14 @@ export default function Home() {
   // Stable references — prevents SidebarContent memo from breaking on every keystroke
   const closeSidebar = useCallback(() => setSidebarOpen(false), []);
   const dismissError = useCallback(() => setErrorMsg(null), []);
+  
+  const handleHistorySelect = useCallback((item: ResearchItem) => {
+    setQuery(item.query);
+    setReport(stripThinking(item.report || "### Error\nReport data was empty or corrupted in the database."));
+    setJobId(null);
+    setLoading(false);
+    setErrorMsg(null);
+  }, []);
   
   const clearChat = useCallback(() => {
     setReport("");
@@ -309,7 +317,7 @@ export default function Home() {
               </div>
               <SidebarContent
                 history={history}
-                onSelect={setReport}
+                onSelect={handleHistorySelect}
                 onClose={closeSidebar}
               />
             </motion.aside>
@@ -321,7 +329,7 @@ export default function Home() {
       <aside className="hidden xl:flex w-72 shrink-0 flex-col fixed inset-y-0 left-0 z-20 border-r border-white/[0.02] bg-white/[0.01] backdrop-blur-3xl">
         <SidebarContent
           history={history}
-          onSelect={setReport}
+          onSelect={handleHistorySelect}
           onClose={closeSidebar}
         />
       </aside>
@@ -442,6 +450,7 @@ export default function Home() {
 
             {report && (
               <motion.div
+                key={report.substring(0, 32)}
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
