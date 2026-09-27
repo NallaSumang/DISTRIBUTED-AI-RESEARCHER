@@ -285,3 +285,75 @@ body {
   background: rgba(255, 255, 255, 0.01);
 }
 
+/* ─────────────────────────────────────────────────────────────
+   MOBILE OVERRIDES — report-body scaled for phone screens
+   Only active at ≤ 640px. Zero desktop changes.
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .report-body {
+    font-size: 0.875rem;
+    line-height: 1.75;
+    letter-spacing: 0.01em;
+  }
+
+  .report-body h1 {
+    font-size: 1.2rem;
+    margin-top: 1.75em;
+  }
+
+  .report-body h2 {
+    font-size: 1rem;
+    padding-left: 0.75em;
+    margin-top: 1.75em;
+  }
+
+  .report-body h3 {
+    font-size: 0.95rem;
+    margin-top: 1.5em;
+  }
+
+  .report-body h4,
+  .report-body h5 {
+    font-size: 0.8rem;
+    margin-top: 1.25em;
+  }
+
+  .report-body p {
+    margin-bottom: 1.2em;
+  }
+
+  .report-body ul,
+  .report-body ol {
+    padding-left: 1.2em;
+  }
+
+  .report-body blockquote {
+    padding: 0.5em 0.9em;
+    margin: 1.25em 0;
+  }
+
+  .report-body pre {
+    padding: 0.9em 0.85em;
+    font-size: 0.78rem;
+    border-radius: 0.5rem;
+  }
+
+  /* Tables: force horizontal scroll so they never break the layout */
+  .report-body table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+    font-size: 0.75em;
+  }
+
+  .report-body th,
+  .report-body td {
+    padding: 0.5em 0.7em;
+  }
+
+  .report-body hr {
+    margin: 1.75em 0;
+  }
+}
